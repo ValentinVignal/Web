@@ -28,7 +28,7 @@ export class Operations extends React.Component <Props,State> {
     render() {
         let self = this;
         return(
-            <form>
+            <div>
                 <input type = "date" onChange={this.handleChangeDate}/>
                 <input type = 'number' value = {this.state.input_montant} onChange={this.handleChangeMontant}/>
                 <button onClick = {() => {
@@ -62,7 +62,7 @@ export class Operations extends React.Component <Props,State> {
                         </li>
                     )}
                 </ul>
-            </form>
+            </div>
         );
     }
 }

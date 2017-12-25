@@ -5,7 +5,7 @@ import {Action, Banque, Transaction} from "./commun";
 
 
 const banqueReducer = (state: Banque, action: Action) => {
-    if (state === null) {
+    if (state == null) {
         return {argent: 0, historique: [], transactions: []};
     }
     switch (action.type) {
