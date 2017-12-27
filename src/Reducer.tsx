@@ -10,21 +10,6 @@ const banqueReducer = (state: Banque, action: Action) => {
     }
     switch (action.type) {
         case 'ADD_TRANSACTION':
-            console.log("----------");
-            console.log("add " + action);
-            console.log("previous state :");
-            console.log(state);
-            console.log("new state :");
-            console.log({
-                argent: state.argent,
-                historique:state.historique.slice(0),
-                transactions: [...state.transactions, {
-                    id : action.id,
-                    date: action.date,
-                    montant: action.montant,
-                    validated : false
-                }]
-            });
             return {
                 argent: state.argent,
                 historique:state.historique.slice(0),
@@ -35,22 +20,24 @@ const banqueReducer = (state: Banque, action: Action) => {
                     validated : false
                 }]
             };
-        case 'VALIDATE_TRANSACTION:' :
-            console.log("validate " + action);
-            function renvoie_montant(liste:Transaction[], action:Action){
-                for (let t of liste){
-                    if (t.id == action.id){
-                        return(t.montant)
-                    }
+        case 'VALIDATE_TRANSACTION' :
+        function renvoie_montant(liste:Transaction[], action:Action){
+            for (let t of liste){
+                if (t.id === action.id){
+                    return(t.montant);
                 }
             }
+        }
+
+            let h = state.historique.slice(0);
+            h.push(state.argent + renvoie_montant(state.transactions, action));
             return {
                 transactions : state.transactions.map(t =>
                     (t.id === action.id)
                         ? { ...t, validated : true}
                         : t),
                 argent : state.argent + renvoie_montant(state.transactions, action),
-                historique : state.historique.slice(0).push(state.argent + renvoie_montant(state.transactions, action))
+                historique : h
             };
         default:
             return state;

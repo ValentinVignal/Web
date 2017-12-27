@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Banque, Transaction} from "./commun";
 
-interface State {id_transactions:  number[]}
+interface State {}
 interface Props {banque:Banque, store: any}
 
 
@@ -12,7 +12,7 @@ const afficheTransactions_Transactions = (tableau: Transaction[]) => {
     for (let k :number=0; k< tableau.length && (nb<10); k++ ){
         if (!tableau[k].validated){
             tab_retour.push(
-                <tr>
+                <tr key={k}>
                     <td>
                         Transaction n°{tableau[k].id}
                     </td>
@@ -20,7 +20,8 @@ const afficheTransactions_Transactions = (tableau: Transaction[]) => {
                         {tableau[k].montant}€
                     </td>
                 </tr>
-            )
+            );
+            nb++;
         }
     }
     return tab_retour
@@ -31,7 +32,8 @@ const idNonValidees = (tableau :Transaction[]) =>{
     let tab_retour:number[] = [];
     for (let k :number=0; k< tableau.length && (nb<10); k++ ){
         if (!tableau[k].validated){
-            tab_retour.push(tableau[k].id)
+            tab_retour.push(tableau[k].id);
+            nb++;
         }
     }
     return tab_retour
@@ -39,32 +41,29 @@ const idNonValidees = (tableau :Transaction[]) =>{
 
 
 export class Transactions extends React.Component <Props, State> {
-    constructor(props){
-        super(props);
-        this.state ={id_transactions: idNonValidees(this.props.banque.transactions)};
-    };
 
     render () {
         let self = this;
+        let id_transactions = idNonValidees(this.props.banque.transactions);
         return (
             <div>
                 <button onClick = {() => {
                     self.props.store.dispatch({
                         type: 'VALIDATE_TRANSACTION',
-                        id: self.state.id_transactions[0]
+                        id: id_transactions[0]
                     });
                 }}>
                     Valider la derniere transaction
                 </button>
                 <table>
                     <thead>
-                        <tr>
-                            <td> Numero de la transaction </td>
-                            <td> Montant de la transaction </td>
-                        </tr>
+                    <tr>
+                        <td> Numero de la transaction </td>
+                        <td> Montant de la transaction </td>
+                    </tr>
                     </thead>
                     <tbody>
-                        {...afficheTransactions_Transactions(self.props.banque.transactions)}
+                    {...afficheTransactions_Transactions(self.props.banque.transactions)}
                     </tbody>
                 </table>
             </div>

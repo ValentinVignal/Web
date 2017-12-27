@@ -36,7 +36,7 @@ export class Operations extends React.Component <Props,State> {
                         type : 'ADD_TRANSACTION',
                         id: Operations.nextTransactionId++,
                         date: self.state.input_date,
-                        montant : self.state.input_montant
+                        montant : Number(self.state.input_montant)
                     });
                     self.setState({input_date: new Date()});
                     self.setState({input_montant : 0});

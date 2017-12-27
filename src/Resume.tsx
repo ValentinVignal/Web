@@ -13,11 +13,11 @@ const afficheTransactions_Resume = (tableau: Transaction[]) => {
     for (var k :number=0; k< tableau.length && (nb<10); k++ ){
         if (tableau[k].validated){
             tab_retour.push(
-                <tr>
-                    <td>
+                <tr key={k}>
+                    <td key={"id"}>
                         Transaction n°{tableau[k].id}
                     </td>
-                    <td>
+                    <td key={'montant'}>
                         {tableau[k].montant}€
                     </td>
                 </tr>
@@ -39,9 +39,7 @@ export class Resume extends React.Component <Props, State> {
                 </h1>
                 <table>
                     <tbody>
-                        <tr>
-                            {...afficheTransactions_Resume(this.props.banque.transactions)}
-                        </tr>
+                    {...afficheTransactions_Resume(this.props.banque.transactions)}
                     </tbody>
                 </table>
             </div>
