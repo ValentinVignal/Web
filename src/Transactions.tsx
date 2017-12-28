@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Banque, Transaction} from "./commun";
 
 interface State {}
-interface Props {banque:Banque, store: any}
+interface Props {banque:Banque, store: any, class_name:string}
 
 
 
@@ -14,7 +14,7 @@ const afficheTransactions_Transactions = (tableau: Transaction[]) => {
             tab_retour.push(
                 <tr key={k}>
                     <td>
-                        Transaction n°{tableau[k].id}
+                        Transaction n°{tableau[k].id +1}
                     </td>
                     <td>
                         {tableau[k].montant}€
@@ -46,7 +46,7 @@ export class Transactions extends React.Component <Props, State> {
         let self = this;
         let id_transactions = idNonValidees(this.props.banque.transactions);
         return (
-            <div>
+            <div className={this.props.class_name}>
                 <button onClick = {() => {
                     self.props.store.dispatch({
                         type: 'VALIDATE_TRANSACTION',

@@ -13,10 +13,10 @@ const store = createStore(transactionApp);
 
 const FilterLink = ({filter,currentFilter, children})=> {
     if (filter === currentFilter){
-        return <span> {children} </span>
+        return <span className = 'ongletActif'> {children} </span>
     }
     return (
-        <a href='#'
+        <span className = 'ongletInactif'
            onClick={e => {
                e.preventDefault();
                store.dispatch({
@@ -26,7 +26,7 @@ const FilterLink = ({filter,currentFilter, children})=> {
            }}
         >
             {children}
-        </a>
+        </span>
     );
 };
 
@@ -37,11 +37,15 @@ const getVisibleTransactions = (banque: Banque, filter: string) => {
     switch (filter) {
         case 'SHOW_RESUME':
             return (
-                <Resume banque={banque}/>
+                <Resume
+                    banque={banque}
+                    class_name = 'onglet'
+                />
             );
         case 'SHOW_TRANSACTIONS':
             return (
                 <Transactions
+                    class_name = 'onglet'
                     store = {store}
                     banque = {(store.getState() as ReduxState).banque}
                 />
@@ -49,6 +53,7 @@ const getVisibleTransactions = (banque: Banque, filter: string) => {
         case 'SHOW_OPERATIONS':
             return(
                 <Operations
+                    class_name = 'onglet'
                     banque={(store.getState() as ReduxState).banque}
                     store={store}
                 />
@@ -70,25 +75,35 @@ class TransactionApp extends React.Component <Props, State> {
             visibilityFilter
         );
         return (
-            <div>
-                <FilterLink
-                    filter = 'SHOW_RESUME'
-                    currentFilter = {visibilityFilter}
-                >
-                    Resume
-                </FilterLink>
-                <FilterLink
-                    filter = 'SHOW_TRANSACTIONS'
-                    currentFilter = {visibilityFilter}
-                >
-                    Transactions
-                </FilterLink>
-                <FilterLink
-                    filter = 'SHOW_OPERATIONS'
-                    currentFilter = {visibilityFilter}
-                >
-                    Operations
-                </FilterLink>
+            <div className = 'all' id = 'conteneurPrincipal'>
+                <header>
+                    <img src="images/logo_cognimap.png" alt="Logo du site" id="logo"/>
+                    <p id = 'petiteIntroduction'>
+                        <em> Coucou !</em> <br/>
+                        Bienvenue dans la super appli de votre banque <br/>
+                        En plus elle est trop bien réalisée
+                    </p>
+                </header>
+                <nav>
+                    <FilterLink
+                        filter = 'SHOW_RESUME'
+                        currentFilter = {visibilityFilter}
+                    >
+                        Resume
+                    </FilterLink>
+                    <FilterLink
+                        filter = 'SHOW_TRANSACTIONS'
+                        currentFilter = {visibilityFilter}
+                    >
+                        Transactions
+                    </FilterLink>
+                    <FilterLink
+                        filter = 'SHOW_OPERATIONS'
+                        currentFilter = {visibilityFilter}
+                    >
+                        Operations
+                    </FilterLink>
+                </nav>
                 {visibleTransactions}
             </div>
         )

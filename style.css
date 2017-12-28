@@ -1,0 +1,112 @@
+
+.all
+{
+    font-family : "Bree Serif", Arial;
+    color : slategray;
+}
+
+
+.ongletActif
+{
+    color : slategrey;
+    font-family : "Bree Serif",Arial;
+    font-style : italic;
+    background-color : antiquewhite;
+}
+
+.ongletInactif
+{
+    color: lightseagreen;
+    font-family : "Bree Serif" ,Arial;
+    font-style : normal;
+    background-color : antiquewhite;
+    opacity : 0.8;
+}
+
+.ongletInactif:hover
+{
+    text-decoration : underline;
+}
+
+
+.onglet /*Ce sont les onglets qui s'affichent */
+{
+    color : slategrey;
+    align-self : center;
+    justify-content : space-around;
+}
+
+.nomAxeTabResume{
+    color: lightseagreen;
+}
+
+#ongletResume{
+    display : flex;
+    flex-direction : column;
+    align-content : space-between
+}
+
+#petiteIntroduction
+{
+    font-size : 0.7em;
+    align-self : flex-start;
+}
+
+#conteneurPrincipal
+{
+    display : flex;
+    flex-direction : column;
+    flex-wrap : wrap;
+    justify-content : center;
+
+}
+
+#logo
+{
+    height: 300px;
+    width: 1200px;
+    align-self: center;
+}
+
+header{
+    display : flex;
+    flex-direction : column;
+    justify-content : right;
+    align-content : space-between;
+}
+
+h1
+{
+    font-size : 3em;
+    text-shadow: 1px 1px 2px gray;
+}
+
+em
+{
+    font-style : oblique;
+    color: lightseagreen;
+}
+
+body
+{
+    background-color : whitesmoke;
+}
+
+thead{
+    color : lightseagreen;
+    border-color : slategray;
+}
+
+table{
+    border-collapse: collapse;
+    margin : 7px;
+}
+
+td, th
+{
+    border : 2px solid;
+}
+
+nav{
+    align-self: flex-end;
+}

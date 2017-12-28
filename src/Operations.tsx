@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Banque} from "./commun";
 
 interface State {input_date:Date, input_montant : number}
-interface Props { banque: Banque, store:any}
+interface Props { banque: Banque, store:any , class_name:string}
 
 
 
@@ -22,13 +22,13 @@ export class Operations extends React.Component <Props,State> {
     }
 
     handleChangeMontant(event) {
-        this.setState({input_montant: event.target.value});
+        this.setState({input_montant: Number(event.target.value)});
     }
 
     render() {
         let self = this;
         return(
-            <div>
+            <div className = {this.props.class_name}>
                 <input type = "date" onChange={this.handleChangeDate}/>
                 <input type = 'number' value = {this.state.input_montant} onChange={this.handleChangeMontant}/>
                 <button onClick = {() => {
@@ -36,7 +36,7 @@ export class Operations extends React.Component <Props,State> {
                         type : 'ADD_TRANSACTION',
                         id: Operations.nextTransactionId++,
                         date: self.state.input_date,
-                        montant : Number(self.state.input_montant)
+                        montant : self.state.input_montant
                     });
                     self.setState({input_date: new Date()});
                     self.setState({input_montant : 0});
