@@ -1,12 +1,12 @@
 import * as React from 'react'
-import {Banque} from "./commun";
+import {Banque} from "../commun";
+import {connect} from 'react-redux';
 
 interface State {input_date:Date, input_montant : number}
-interface Props { banque: Banque, store:any , class_name:string}
+interface Props { banque?: Banque, class_name:string, addTransaction?:{(id: number , date: Date, montant : number):void;}, validateTransaction?:{(id: number):void;}}
 
 
-
-export class Operations extends React.Component <Props,State> {
+class _Operations extends React.Component <Props,State> {
     private static nextTransactionId: number = 0;
     constructor(props){
         super(props);
@@ -31,27 +31,17 @@ export class Operations extends React.Component <Props,State> {
             <div className = {this.props.class_name}>
                 <input type = "date" onChange={this.handleChangeDate}/>
                 <input type = 'number' value = {this.state.input_montant} onChange={this.handleChangeMontant}/>
-                <button onClick = {() => {
-                    self.props.store.dispatch({
-                        type : 'ADD_TRANSACTION',
-                        id: Operations.nextTransactionId++,
-                        date: self.state.input_date,
-                        montant : self.state.input_montant
-                    });
-                    self.setState({input_date: new Date()});
-                    self.setState({input_montant : 0});
-                }}>
+                <button onClick = {() =>
+                    this.props.addTransaction(Operations.nextTransactionId++, self.state.input_date, self.state.input_montant)}
+                >
                     Add Transaction
                 </button>
                 <ul>
                     {this.props.banque.transactions.map(transaction =>
                         <li key={transaction.id}
-                            onClick ={() =>{
-                                self.props.store.dispatch ({
-                                    type : 'VALIDATE_TRANSACTION',
-                                    id : transaction.id
-                                });
-                            }}
+                            onClick ={ () =>
+                                this.props.validateTransaction(transaction.id)
+                            }
                             style ={{
                                 color : transaction.validated ?
                                     'green':
@@ -67,3 +57,27 @@ export class Operations extends React.Component <Props,State> {
     }
 }
 
+const mapStateToProps = state =>{
+    return {
+        banque : state.banque
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        addTransaction : (id: number , date: Date, montant : number) => dispatch ({
+            type : 'ADD_TRANSACTION',
+            id: id,
+            date: date,
+            montant : montant
+        }),
+        validateTransaction : (id : number) => dispatch ({
+            type : 'VALIDATE_TRANSACTION',
+            id : id
+        })
+    }
+};
+
+export const Operations = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(_Operations);

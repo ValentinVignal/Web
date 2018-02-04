@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {Banque, Transaction} from "./commun";
+import {Banque, Transaction} from "../commun";
+import  {connect} from 'react-redux';
 
 interface State {}
-interface Props {banque:Banque, class_name:string}
+interface Props {banque?:Banque, class_name:string}
 
 
 
@@ -48,7 +49,7 @@ const afficheHistorique = (tableau : number[]) => {
 };
 
 
-export class Resume extends React.Component <Props, State> {
+class _Resume extends React.Component <Props, State> {
     render () {
         return (
             <div className={this.props.class_name} id ='ongletResume'>
@@ -72,4 +73,15 @@ export class Resume extends React.Component <Props, State> {
             </div>
         )
     }
+}
+
+const mapStateToProps = state =>{
+    return {
+        banque : state.banque
+    }
 };
+
+
+export const Resume = connect(
+    mapStateToProps,
+)(_Resume);

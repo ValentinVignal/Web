@@ -1,36 +1,17 @@
 import { createStore } from 'redux';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
+import {Provider, connect} from 'react-redux';
 
 import transactionApp from './Reducer'
 import {Banque, ReduxState} from "./commun";
-import {Operations} from "./Operations";
-import {Resume}from './Resume';
-import {Transactions}from './Transactions'
+import {Operations} from "./components/Operations";
+import {Resume}from './components/Resume';
+import {Transactions}from './components/Transactions'
+import {FilterLink} from './components/FilterLink'
 
-
+// On crée le store avec la méthode redux createStore
 const store = createStore(transactionApp);
-
-const FilterLink = ({filter,currentFilter, children})=> {
-    if (filter === currentFilter){
-        return <span className = 'ongletActif'> {children} </span>
-    }
-    return (
-        <span className = 'ongletInactif'
-           onClick={e => {
-               e.preventDefault();
-               store.dispatch({
-                   type: 'SET_VISIBILITY_FILTER',
-                   filter: filter
-               });
-           }}
-        >
-            {children}
-        </span>
-    );
-};
-
-
 
 
 const getVisibleTransactions = (banque: Banque, filter: string) => {
@@ -38,7 +19,6 @@ const getVisibleTransactions = (banque: Banque, filter: string) => {
         case 'SHOW_RESUME':
             return (
                 <Resume
-                    banque={banque}
                     class_name = 'onglet'
                 />
             );
@@ -46,25 +26,21 @@ const getVisibleTransactions = (banque: Banque, filter: string) => {
             return (
                 <Transactions
                     class_name = 'onglet'
-                    store = {store}
-                    banque = {(store.getState() as ReduxState).banque}
                 />
             );
         case 'SHOW_OPERATIONS':
             return(
                 <Operations
                     class_name = 'onglet'
-                    banque={(store.getState() as ReduxState).banque}
-                    store={store}
                 />
             );
     }
 };
 
-interface Props {banque: Banque, visibilityFilter:string}
+interface Props {banque?: Banque, visibilityFilter?:string}
 interface State {}
 
-class TransactionApp extends React.Component <Props, State> {
+class _TransactionApp extends React.Component <Props, State> {
     render () {
         const{
             banque,
@@ -110,16 +86,40 @@ class TransactionApp extends React.Component <Props, State> {
     }
 }
 
+const mapStateToProps = state =>{
+    return {
+        banque : state.banque,
+        visibilityFilter: state.visibilityFilter
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        addTransaction : (id: number , date: Date, montant : number) => dispatch ({
+            type : 'ADD_TRANSACTION',
+            id: id,
+            date: date,
+            montant : montant
+        }),
+        validateTransaction : (id : number) => dispatch ({
+            type : 'VALIDATE_TRANSACTION',
+            id : id
+        })
+    }
+};
+
+const TransactionApp = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(_TransactionApp);
 
 const render = () => {
     ReactDOM.render(
-        <TransactionApp
-            banque={(store.getState() as ReduxState).banque}
-            visibilityFilter = {(store.getState() as ReduxState).visibilityFilter}
-        />,
+        <Provider store={store}>
+            <TransactionApp/>
+        </Provider>,
         document.getElementById('root')
     );
 };
 
-store.subscribe(render);
+//store.subscribe(render);
 render();

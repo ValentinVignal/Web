@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {Banque, Transaction} from "./commun";
+import {Banque, Transaction} from "../commun";
+import  {connect} from 'react-redux';
 
 interface State {}
-interface Props {banque:Banque, store: any, class_name:string}
+interface Props {banque?:Banque, class_name: string, validateTransaction?:{(id: number):void;}}
 
 
 
@@ -28,6 +29,7 @@ const afficheTransactions_Transactions = (tableau: Transaction[]) => {
 };
 
 const idNonValidees = (tableau :Transaction[]) =>{
+    // Renvoie les id des 10 plus anciennes transactions non validées
     let nb:number = 0;
     let tab_retour:number[] = [];
     for (let k :number=0; k< tableau.length && (nb<10); k++ ){
@@ -40,19 +42,14 @@ const idNonValidees = (tableau :Transaction[]) =>{
 };
 
 
-export class Transactions extends React.Component <Props, State> {
+class _Transactions extends React.Component <Props, State> {
 
     render () {
         let self = this;
         let id_transactions = idNonValidees(this.props.banque.transactions);
         return (
             <div className={this.props.class_name}>
-                <button onClick = {() => {
-                    self.props.store.dispatch({
-                        type: 'VALIDATE_TRANSACTION',
-                        id: id_transactions[0]
-                    });
-                }}>
+                <button onClick = { () => self.props.validateTransaction(id_transactions[0])}>
                     Valider la derniere transaction
                 </button>
                 <table>
@@ -71,3 +68,22 @@ export class Transactions extends React.Component <Props, State> {
     }
 
 }
+
+const mapStateToProps = state =>{
+    return {
+        banque : state.banque
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        validateTransaction : (id : number) => dispatch ({
+            type : 'VALIDATE_TRANSACTION',
+            id : id
+        })
+    }
+};
+
+export const Transactions =  connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(_Transactions);
